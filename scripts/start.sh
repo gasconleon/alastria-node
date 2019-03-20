@@ -25,10 +25,10 @@ do
     -l|-L|--local-rpc)
     RPCADDR=127.0.0.1
     ;;
-	-d|-D|--cors-domains)
-	QUORUM_CORS_DOMAINS=$2;
-	shift;
-	;;
+    -d|-D|--cors-domains)
+    QUORUM_CORS_DOMAINS=$2;
+    shift;
+    ;;
     -h|-H|--help)
     echo $MESSAGE
     exit
