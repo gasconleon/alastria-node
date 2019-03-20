@@ -2,7 +2,7 @@
 set -u
 set -e
 
-MESSAGE='Usage: start.sh <--clean> <--no-monitor> <--watch> <--local-rpc>'
+MESSAGE='Usage: start.sh <--clean> <--no-monitor> <--watch> <--local-rpc> <--cors-domains <value>>'
 
 MONITOR=1
 WATCH=0
@@ -25,6 +25,10 @@ do
     -l|-L|--local-rpc)
     RPCADDR=127.0.0.1
     ;;
+	-d|-D|--cors-domains)
+	QUORUM_CORS_DOMAINS=$2;
+	shift;
+	;;
     -h|-H|--help)
     echo $MESSAGE
     exit
@@ -52,8 +56,9 @@ check_constellation_isStarted(){
 }
 
 NETID=82584648528
+[ ! -z "$QUORUM_CORS_DOMAINS" ] && QUORUM_CORS_DOMAINS="--rpccorsdomain \"$QUORUM_CORS_DOMAINS\""
 mapfile -t IDENTITY <~/alastria/data/IDENTITY
-GLOBAL_ARGS="--networkid $NETID --identity $IDENTITY --permissioned --rpc --rpcaddr $RPCADDR --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul --rpcport 22000 --port 21000 --istanbul.requesttimeout 10000  --ethstats $IDENTITY:bb98a0b6442386d0cdf8a31b267892c1@netstats.testnet.alastria.io.builders:80 --verbosity 3 --vmdebug --emitcheckpoints --targetgaslimit 18446744073709551615 --syncmode full --vmodule consensus/istanbul/core/core.go=5 "
+GLOBAL_ARGS="--networkid $NETID --identity $IDENTITY --permissioned --rpc --rpcaddr $RPCADDR $QUORUM_CORS_DOMAINS --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,istanbul --rpcport 22000 --port 21000 --istanbul.requesttimeout 10000  --ethstats $IDENTITY:bb98a0b6442386d0cdf8a31b267892c1@netstats.testnet.alastria.io.builders:80 --verbosity 3 --vmdebug --emitcheckpoints --targetgaslimit 18446744073709551615 --syncmode full --vmodule consensus/istanbul/core/core.go=5 "
 
 _TIME=$(date +%Y%m%d%H%M%S)
 
